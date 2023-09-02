@@ -4,8 +4,15 @@ Copyright © 2023 Kevin Chen
 package cmd
 
 import (
+	"2023_asset_management/asset"
+	"2023_asset_management/di"
 	"2023_asset_management/helper"
+	"crypto/subtle"
 	"fmt"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"net/http"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -16,8 +23,44 @@ var startCmd = &cobra.Command{
 	Short: "start main program",
 	Long:  `start main program`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start called", helper.Config.Port())
+		diObj := di.InitializeDICmd()
+		go StartRestAPI(diObj)
+		select {}
 	},
+}
+
+func StartRestAPI(*di.DI) {
+	e := echo.New()
+	e.HideBanner = true
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.GET("", func(c echo.Context) error {
+		return c.String(http.StatusOK, "pong")
+	})
+
+	e.Use(middleware.BasicAuthWithConfig(middleware.BasicAuthConfig{
+		Skipper: func(c echo.Context) bool {
+			if c.Request().RequestURI == "/" {
+				return true
+			}
+			if strings.HasPrefix(c.Request().RequestURI, "/doc") {
+				return false
+			}
+			return true
+		},
+		Validator: func(username, password string, c echo.Context) (bool, error) {
+			docusr := helper.Config.DocUser()
+			docpwd := helper.Config.DocPwd()
+			if subtle.ConstantTimeCompare([]byte(username), []byte(docusr)) == 1 &&
+				subtle.ConstantTimeCompare([]byte(password), []byte(docpwd)) == 1 {
+				return true, nil
+			}
+			return false, nil
+		},
+	}))
+	e.FileFS("/doc/api", "index.html", echo.MustSubFS(asset.IndexHTML, "swagger"))
+	e.StaticFS("/doc/api", echo.MustSubFS(asset.Dist, "swagger"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", helper.Config.Port())))
 }
 
 func init() {

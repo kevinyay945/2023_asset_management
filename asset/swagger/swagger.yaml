@@ -1,0 +1,58 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: 2023 asset management
+  description: 2023 asset management
+  contact:
+    name: Kevin Chen
+    email: kevinyay945@gmail.com
+    url: https://kevinyay945.com
+servers:
+  - url: http://localhost:18191
+tags:
+  - name: v1Asset
+    description: version 1 Asset
+paths:
+  /v1/asset:
+    post:
+      summary: upload one asset and get preview link
+      description: upload one asset and get preview link
+      tags:
+        - v1Asset
+      operationId: v1UploadAsset
+      responses:
+        '200':
+          description: license data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TempAsset'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    TempAsset:
+      required:
+        - url
+      properties:
+        name:
+          type: string
+          example: "http://localhost/temp-link"
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message
