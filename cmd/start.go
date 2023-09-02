@@ -7,6 +7,7 @@ import (
 	"2023_asset_management/asset"
 	"2023_asset_management/di"
 	"2023_asset_management/helper"
+	api "2023_asset_management/interface/rest_api"
 	"crypto/subtle"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -29,7 +30,7 @@ var startCmd = &cobra.Command{
 	},
 }
 
-func StartRestAPI(*di.DI) {
+func StartRestAPI(diObj *di.DI) {
 	e := echo.New()
 	e.HideBanner = true
 	e.Use(middleware.Logger())
@@ -60,6 +61,7 @@ func StartRestAPI(*di.DI) {
 	}))
 	e.FileFS("/doc/api", "index.html", echo.MustSubFS(asset.IndexHTML, "swagger"))
 	e.StaticFS("/doc/api", echo.MustSubFS(asset.Dist, "swagger"))
+	api.RegisterHandlers(e.Group(""), diObj.RestAPI)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", helper.Config.Port())))
 }
 

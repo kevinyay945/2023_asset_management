@@ -5,6 +5,7 @@
 package di
 
 import (
+	"2023_asset_management/application"
 	api "2023_asset_management/interface/rest_api"
 	"github.com/google/wire"
 )
@@ -13,6 +14,7 @@ import (
 // a grumpy greeter.
 func InitializeDICmd() *DI {
 	wire.Build(
+		application.NewFileStore,
 		api.NewEchoServer,
 		NewDI,
 	)

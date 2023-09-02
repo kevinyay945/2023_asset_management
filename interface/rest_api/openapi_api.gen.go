@@ -4,14 +4,18 @@
 package api
 
 import (
+	"fmt"
+	"net/http"
+
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/labstack/echo/v4"
 )
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// upload one asset and get preview link
-	// (POST /v1/asset)
-	V1UploadAsset(ctx echo.Context) error
+	// (POST /v1/asset/{location})
+	V1UploadAsset(ctx echo.Context, location V1UploadAssetParamsLocation) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -22,9 +26,16 @@ type ServerInterfaceWrapper struct {
 // V1UploadAsset converts echo context to params.
 func (w *ServerInterfaceWrapper) V1UploadAsset(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "location" -------------
+	var location V1UploadAssetParamsLocation
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "location", runtime.ParamLocationPath, ctx.Param("location"), &location)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter location: %s", err))
+	}
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.V1UploadAsset(ctx)
+	err = w.Handler.V1UploadAsset(ctx, location)
 	return err
 }
 
@@ -56,6 +67,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.POST(baseURL+"/v1/asset", wrapper.V1UploadAsset)
+	router.POST(baseURL+"/v1/asset/:location", wrapper.V1UploadAsset)
 
 }

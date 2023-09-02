@@ -13,13 +13,36 @@ tags:
   - name: v1Asset
     description: version 1 Asset
 paths:
-  /v1/asset:
+  /v1/asset/{location}:
     post:
       summary: upload one asset and get preview link
       description: upload one asset and get preview link
       tags:
         - v1Asset
       operationId: v1UploadAsset
+      parameters:
+        - name: location
+          in: path
+          description: save location
+          required: true
+          schema:
+            type: string
+            enum:
+              - "obsidian"
+              - "blog"
+            x-enum-varnames:
+              - OBSIDIAN
+              - BLOG
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: license data

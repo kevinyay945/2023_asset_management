@@ -15,6 +15,10 @@ openapi_http:
 di:
 	wire gen
 
+.PHONY: go_generate
+go_generate:
+	go generate ./...
+
 .PHONY: generate
 generate: openapi_http di
 
