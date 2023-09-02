@@ -41,7 +41,7 @@ components:
       required:
         - url
       properties:
-        name:
+        url:
           type: string
           example: "http://localhost/temp-link"
     Error:

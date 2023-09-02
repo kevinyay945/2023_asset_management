@@ -13,5 +13,7 @@ func NewEchoServer() ServerInterface {
 
 func (e *EchoServer) V1UploadAsset(ctx echo.Context) error {
 	//TODO implement me
-	return ctx.JSON(http.StatusOK, "v1UploadAsset")
+	return ctx.JSON(http.StatusOK, TempAsset{
+		Url: "http://localhost/link",
+	})
 }

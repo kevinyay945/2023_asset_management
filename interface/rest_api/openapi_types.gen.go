@@ -14,5 +14,5 @@ type Error struct {
 
 // TempAsset defines model for TempAsset.
 type TempAsset struct {
-	Name *string `json:"name,omitempty"`
+	Url string `json:"url"`
 }
