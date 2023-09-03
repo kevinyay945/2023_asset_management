@@ -16,8 +16,18 @@ type GoogleDriveSuite struct {
 }
 
 func TestSuiteInitGoogleDrive(t *testing.T) {
-	_, err := os.ReadFile("../../.config.dev.yaml")
+	data, err := os.ReadFile("../../.config.dev.yaml")
 	if err != nil {
+		t.Skip("Skipping testing in production")
+	}
+	config := struct {
+		OpenInfrastructure bool `yaml:"OPEN_INFRASTRUCTURE"`
+	}{}
+	err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		t.Skip("Skipping testing in production")
+	}
+	if !config.OpenInfrastructure {
 		t.Skip("Skipping testing in production")
 	}
 	suite.Run(t, new(GoogleDriveSuite))
