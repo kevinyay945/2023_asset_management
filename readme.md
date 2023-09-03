@@ -24,7 +24,7 @@ make init
 
 ### Use Development Config File
 
-copy .config.yaml to another file
+copy .config.yaml to .config.dev.yaml
 
 ```shell
 cp ./.config.yaml ./.config.dev.yaml

@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-type Suite struct {
+type AssetSuite struct {
 	suite.Suite
 	mockCtrl   *gomock.Controller
 	request    *httpexpect.Expect
@@ -23,10 +23,10 @@ type Suite struct {
 }
 
 func TestSuiteInit(t *testing.T) {
-	suite.Run(t, new(Suite))
+	suite.Run(t, new(AssetSuite))
 }
 
-func (t *Suite) SetupTest() {
+func (t *AssetSuite) SetupTest() {
 	t.mockCtrl = gomock.NewController(t.Suite.T())
 	e := echo.New()
 	t.fileStorer = application.NewMockFileStorer(t.mockCtrl)
@@ -44,16 +44,16 @@ func (t *Suite) SetupTest() {
 	})
 }
 
-func (t *Suite) TearDownTest() {
+func (t *AssetSuite) TearDownTest() {
 	defer t.mockCtrl.Finish()
 	defer t.server.Close()
 }
 
-func (t *Suite) Test_V1_upload_asset_success() {
-	data, _ := os.ReadFile("./wakuwaku.jpeg")
+func (t *AssetSuite) Test_V1_upload_asset_success() {
+	data, _ := os.ReadFile("../../asset/test/wakuwaku.jpeg")
 	file := domain.CloudFile{}
 	t.fileStorer.EXPECT().
-		UploadAsset("wakuwaku.jpeg", data, "obsidian").
+		UploadAsset("wakuwaku.jpeg", data, domain.CloudFileLocationObsidian).
 		Return(file, nil)
 	t.fileStorer.EXPECT().GetPreviewLink(file).Return("http://localhost/link", nil)
 
@@ -66,7 +66,7 @@ func (t *Suite) Test_V1_upload_asset_success() {
 	resp.JSON().Object().Value("url").IsEqual("http://localhost/link")
 }
 
-func (t *Suite) Test_V1_upload_asset_path_invalid() {
+func (t *AssetSuite) Test_V1_upload_asset_path_invalid() {
 	t.fileStorer.EXPECT().
 		UploadAsset(gomock.Any(), gomock.Any(), gomock.Any()).
 		Times(0).

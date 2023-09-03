@@ -2,6 +2,7 @@ package api
 
 import (
 	"2023_asset_management/application"
+	"2023_asset_management/domain"
 	"bytes"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -25,6 +26,16 @@ func (location V1UploadAssetParamsLocation) IsValid() bool {
 	}
 	return false
 }
+func (location V1UploadAssetParamsLocation) DomainLocation() domain.CloudFileLocation {
+	switch location {
+	case OBSIDIAN:
+		return domain.CloudFileLocationObsidian
+	case BLOG:
+		return domain.CloudFileLocationBlog
+	}
+	return domain.CloudFileLocationObsidian
+}
+
 func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1UploadAssetParamsLocation) error {
 	if !location.IsValid() {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("location is invalid"))
@@ -44,7 +55,7 @@ func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1UploadAssetParam
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	asset, err := e.fileStorer.UploadAsset(file.Filename, fileBytes.Bytes(), string(location))
+	asset, err := e.fileStorer.UploadAsset(file.Filename, fileBytes.Bytes(), location.DomainLocation())
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}

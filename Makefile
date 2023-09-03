@@ -13,12 +13,18 @@ openapi_http:
 
 .PHONY: di
 di:
-	wire gen
+	wire gen "./di"
 
 .PHONY: go_generate
 go_generate:
 	go generate ./...
 
+.PHONY: clean
+clean:
+	$(RM) ./di/wire_gen.go
+	$(RM) **/*.gen.go
+	$(RM) **/*.mock.go
+
 .PHONY: generate
-generate: openapi_http di
+generate: clean openapi_http di go_generate
 

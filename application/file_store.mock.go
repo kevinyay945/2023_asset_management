@@ -50,7 +50,7 @@ func (mr *MockFileStorerMockRecorder) GetPreviewLink(arg0 interface{}) *gomock.C
 }
 
 // UploadAsset mocks base method.
-func (m *MockFileStorer) UploadAsset(arg0 string, arg1 []byte, arg2 string) (domain.CloudFile, error) {
+func (m *MockFileStorer) UploadAsset(arg0 string, arg1 []byte, arg2 domain.CloudFileLocation) (domain.CloudFile, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UploadAsset", arg0, arg1, arg2)
 	ret0, _ := ret[0].(domain.CloudFile)

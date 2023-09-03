@@ -24,3 +24,4 @@ go.work
 
 /.config.dev.yaml
 /go_build_2023_asset_management
+/asset/test/gcpToken.json
