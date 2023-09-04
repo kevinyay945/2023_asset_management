@@ -12,7 +12,7 @@ import (
 type GoogleDriveSuite struct {
 	suite.Suite
 	mockCtrl *gomock.Controller
-	drive    *GoogleDrive
+	drive    GoogleDriver
 }
 
 func TestSuiteInitGoogleDrive(t *testing.T) {

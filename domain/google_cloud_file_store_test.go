@@ -1,16 +1,19 @@
 package domain
 
 import (
+	"2023_asset_management/infrastructure/googledrive"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/mock/gomock"
+	"google.golang.org/api/drive/v3"
 	"os"
 	"testing"
 )
 
 type GoogleCloudFileStoreSuite struct {
 	suite.Suite
-	mockCtrl *gomock.Controller
-	store    CloudFileStorer
+	mockCtrl     *gomock.Controller
+	store        CloudFileStorer
+	googleDriver *googledrive.MockGoogleDriver
 }
 
 func TestSuiteInitGoogleCloudFileStore(t *testing.T) {
@@ -19,7 +22,8 @@ func TestSuiteInitGoogleCloudFileStore(t *testing.T) {
 
 func (t *GoogleCloudFileStoreSuite) SetupTest() {
 	t.mockCtrl = gomock.NewController(t.Suite.T())
-	t.store = NewGoogleCloudFileStore()
+	t.googleDriver = googledrive.NewMockGoogleDriver(t.mockCtrl)
+	t.store = NewGoogleCloudFileStore(t.googleDriver)
 }
 
 func (t *GoogleCloudFileStoreSuite) TearDownTest() {
@@ -29,6 +33,11 @@ func (t *GoogleCloudFileStoreSuite) TearDownTest() {
 func (t *GoogleCloudFileStoreSuite) Test_upload_file() {
 	data, err := os.ReadFile("../asset/test/wakuwaku.jpeg")
 	t.NoError(err)
+
+	file := drive.File{Name: "wakuwaku.jpeg"}
+	t.googleDriver.EXPECT().CreateFile(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+		Return(&file, nil)
+
 	_, err = t.store.UploadFile("wakuwaku.jpeg", "image/png", data, CloudFileLocationObsidian)
 	t.NoError(err)
 }

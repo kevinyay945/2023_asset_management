@@ -6,6 +6,8 @@ package di
 
 import (
 	"2023_asset_management/application"
+	"2023_asset_management/domain"
+	"2023_asset_management/infrastructure/googledrive"
 	api "2023_asset_management/interface/rest_api"
 	"github.com/google/wire"
 )
@@ -14,7 +16,9 @@ import (
 // a grumpy greeter.
 func InitializeDICmd() *DI {
 	wire.Build(
+		googledrive.NewGoogleDrive,
 		application.NewFileStore,
+		domain.NewGoogleCloudFileStore,
 		api.NewEchoServer,
 		NewDI,
 	)

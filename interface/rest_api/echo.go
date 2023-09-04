@@ -59,7 +59,7 @@ func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1UploadAssetParam
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	link, err := e.fileStorer.GetPreviewLink(asset)
+	link, err := e.fileStorer.GetPreviewLink(asset, location.DomainLocation())
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}

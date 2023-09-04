@@ -30,11 +30,11 @@ var googleDriveUploadLocationProperty map[GoogleDriveUploadLocation]property = m
 func (l GoogleDriveUploadLocation) ParentID() (string, error) {
 	p, ok := googleDriveUploadLocationProperty[l]
 	if !ok {
-		return "", newGoogleDriveError("GoogleDriveUploadLocation.ParentID", fmt.Errorf("Fail to get folderID"))
+		return "", newGoogleDriveError("GoogleDriveUploadLocation.ParentID", fmt.Errorf("Fail to get folderID for %#v", l))
 	}
 	id := p.parentId
 	if id == "" {
-		return "", newGoogleDriveError("GoogleDriveUploadLocation.ParentID", fmt.Errorf("Fail to get folderID"))
+		return "", newGoogleDriveError("GoogleDriveUploadLocation.ParentID", fmt.Errorf("Parent ID is empty for %#v", l))
 	}
 	return id, nil
 }
@@ -45,13 +45,19 @@ const (
 	GoogleDriveUploadLocationBlog
 )
 
+//go:generate mockgen -destination=google_drive.mock.go -package=googledrive -self_package=2023_asset_management/infrastructure/googledrive . GoogleDriver
 type GoogleDriver interface {
+	CheckAuthorization() (err error)
+	GetFileParentId(location GoogleDriveUploadLocation, fileName string) ([]string, error)
+	CreateFile(location GoogleDriveUploadLocation, fileName string, data []byte, mimeType string) (file *drive.File, err error)
+	GetFilePublicLink(blog GoogleDriveUploadLocation, fileName string) (link string, err error)
 }
+
 type GoogleDrive struct {
 	driveService *drive.Service
 }
 
-func NewGoogleDrive() *GoogleDrive {
+func NewGoogleDrive() GoogleDriver {
 	d := GoogleDrive{}
 	token := helper.Config.GoogleDriveApiToken()
 	d.setCredentialsJson(token)
@@ -136,7 +142,7 @@ func (g *GoogleDrive) GetFilePublicLink(blog GoogleDriveUploadLocation, fileName
 				err = newGoogleDriveError("GetFilePublicLink", err)
 				return
 			}
-			link = fmt.Sprintf("https://drive.google.com/uc?export=view&id=%s\n", i.Id)
+			link = fmt.Sprintf("https://drive.google.com/uc?export=view&id=%s", i.Id)
 		}
 	}
 	return

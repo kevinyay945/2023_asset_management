@@ -8,6 +8,8 @@ package di
 
 import (
 	"2023_asset_management/application"
+	"2023_asset_management/domain"
+	"2023_asset_management/infrastructure/googledrive"
 	"2023_asset_management/interface/rest_api"
 )
 
@@ -21,7 +23,9 @@ import (
 // InitializeAuthCmd creates an Auth Init Struct. It will error if the Event is staffed with
 // a grumpy greeter.
 func InitializeDICmd() *DI {
-	fileStorer := application.NewFileStore()
+	googleDriver := googledrive.NewGoogleDrive()
+	cloudFileStorer := domain.NewGoogleCloudFileStore(googleDriver)
+	fileStorer := application.NewFileStore(cloudFileStorer)
 	serverInterface := api.NewEchoServer(fileStorer)
 	di := NewDI(serverInterface)
 	return di

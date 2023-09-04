@@ -55,7 +55,7 @@ func (t *AssetSuite) Test_V1_upload_asset_success() {
 	t.fileStorer.EXPECT().
 		UploadAsset("wakuwaku.jpeg", data, domain.CloudFileLocationObsidian).
 		Return(file, nil)
-	t.fileStorer.EXPECT().GetPreviewLink(file).Return("http://localhost/link", nil)
+	t.fileStorer.EXPECT().GetPreviewLink(file, domain.CloudFileLocationObsidian).Return("http://localhost/link", nil)
 
 	resp := t.request.POST("/v1/asset/obsidian").
 		WithMultipart().
@@ -71,7 +71,7 @@ func (t *AssetSuite) Test_V1_upload_asset_path_invalid() {
 		UploadAsset(gomock.Any(), gomock.Any(), gomock.Any()).
 		Times(0).
 		Return(domain.CloudFile{}, nil)
-	t.fileStorer.EXPECT().GetPreviewLink(domain.CloudFile{}).Times(0).Return("http://localhost/link", nil)
+	t.fileStorer.EXPECT().GetPreviewLink(gomock.Any(), gomock.Any()).Times(0).Return("http://localhost/link", nil)
 	resp := t.request.POST("/v1/asset/invalid_path").Expect()
 
 	resp.Status(http.StatusBadRequest)
