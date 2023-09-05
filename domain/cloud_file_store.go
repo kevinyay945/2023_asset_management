@@ -25,6 +25,8 @@ type CloudFile struct {
 	Location CloudFileLocation
 }
 
+var validMimeType = []string{"image/png"}
+
 //go:generate mockgen -destination=cloud_file_store.mock.go -package=domain -self_package=2023_asset_management/domain . CloudFileStorer
 type CloudFileStorer interface {
 	UploadFile(name string, mimeType string, data []byte, location CloudFileLocation) (file CloudFile, err error)

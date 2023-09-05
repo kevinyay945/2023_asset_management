@@ -25,8 +25,6 @@ func (c *GoogleCloudFileStore) GetPublicLink(file CloudFile, location CloudFileL
 	return
 }
 
-var validMimeType = []string{"image/png"}
-
 func (c *GoogleCloudFileStore) UploadFile(name string, mimeType string, data []byte, location CloudFileLocation) (file CloudFile, err error) {
 	if !slices.Contains(validMimeType, mimeType) {
 		err = newGoogleCloudFileStoreError("UploadFile", fmt.Errorf("invalid mime type: %s", mimeType))
