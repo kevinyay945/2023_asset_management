@@ -15,22 +15,27 @@ type EchoServer struct {
 	fileStorer application.FileStorer
 }
 
+func (e *EchoServer) V1RedirectToPublicLink(ctx echo.Context, location V1RedirectToPublicLinkParamsLocation, fileName string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewEchoServer(fileStorer application.FileStorer) ServerInterface {
 	return &EchoServer{fileStorer: fileStorer}
 }
 
 func (location V1UploadAssetParamsLocation) IsValid() bool {
 	switch location {
-	case OBSIDIAN, BLOG:
+	case V1UploadAssetParamsLocationBLOG, V1UploadAssetParamsLocationOBSIDIAN:
 		return true
 	}
 	return false
 }
 func (location V1UploadAssetParamsLocation) DomainLocation() domain.CloudFileLocation {
 	switch location {
-	case OBSIDIAN:
+	case V1UploadAssetParamsLocationOBSIDIAN:
 		return domain.CloudFileLocationObsidian
-	case BLOG:
+	case V1UploadAssetParamsLocationBLOG:
 		return domain.CloudFileLocationBlog
 	}
 	return domain.CloudFileLocationObsidian
@@ -55,7 +60,7 @@ func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1UploadAssetParam
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	asset, err := e.fileStorer.UploadAsset(file.Filename, fileBytes.Bytes(), location.DomainLocation())
+	asset, err := e.fileStorer.UploadAsset(file.Filename, fileBytes.Bytes(), location.DomainLocation(), "image/png")
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}

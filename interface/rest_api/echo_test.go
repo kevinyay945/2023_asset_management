@@ -53,7 +53,7 @@ func (t *AssetSuite) Test_V1_upload_asset_success() {
 	data, _ := os.ReadFile("../../asset/test/wakuwaku.jpeg")
 	file := domain.CloudFile{}
 	t.fileStorer.EXPECT().
-		UploadAsset("wakuwaku.jpeg", data, domain.CloudFileLocationObsidian).
+		UploadAsset("wakuwaku.jpeg", data, domain.CloudFileLocationObsidian, "image/png").
 		Return(file, nil)
 	t.fileStorer.EXPECT().GetPreviewLink(file, domain.CloudFileLocationObsidian).Return("http://localhost/link", nil)
 
@@ -68,7 +68,7 @@ func (t *AssetSuite) Test_V1_upload_asset_success() {
 
 func (t *AssetSuite) Test_V1_upload_asset_path_invalid() {
 	t.fileStorer.EXPECT().
-		UploadAsset(gomock.Any(), gomock.Any(), gomock.Any()).
+		UploadAsset(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 		Times(0).
 		Return(domain.CloudFile{}, nil)
 	t.fileStorer.EXPECT().GetPreviewLink(gomock.Any(), gomock.Any()).Times(0).Return("http://localhost/link", nil)

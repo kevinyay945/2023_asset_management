@@ -13,6 +13,42 @@ tags:
   - name: v1Asset
     description: version 1 Asset
 paths:
+  /v1/temp-link/{location}/{fileName}:
+    get:
+      summary: redirect to the public link
+      description: redirect to the public link
+      tags:
+        - v1Asset
+      operationId: v1RedirectToPublicLink
+      parameters:
+        - name: location
+          in: path
+          description: save location
+          required: true
+          schema:
+            type: string
+            enum:
+              - "obsidian"
+              - "blog"
+            x-enum-varnames:
+              - OBSIDIAN
+              - BLOG
+        - name: fileName
+          in: path
+          description: save location
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: public link
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /v1/asset/{location}:
     post:
       summary: upload one asset and get preview link

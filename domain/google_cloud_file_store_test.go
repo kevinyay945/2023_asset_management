@@ -41,3 +41,17 @@ func (t *GoogleCloudFileStoreSuite) Test_upload_file() {
 	_, err = t.store.UploadFile("wakuwaku.jpeg", "image/png", data, CloudFileLocationObsidian)
 	t.NoError(err)
 }
+
+func (t *GoogleCloudFileStoreSuite) Test_upload_file_check_for_invalid_mime_type() {
+	data, err := os.ReadFile("../asset/test/wakuwaku.jpeg")
+	t.NoError(err)
+	file := drive.File{Name: "wakuwaku.jpeg"}
+
+	t.googleDriver.EXPECT().
+		CreateFile(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+		Times(0).
+		Return(&file, nil)
+
+	_, err = t.store.UploadFile("wakuwaku.jpeg", "invalid mime type", data, CloudFileLocationObsidian)
+	t.Error(err)
+}

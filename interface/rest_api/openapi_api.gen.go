@@ -16,6 +16,9 @@ type ServerInterface interface {
 	// upload one asset and get preview link
 	// (POST /v1/asset/{location})
 	V1UploadAsset(ctx echo.Context, location V1UploadAssetParamsLocation) error
+	// redirect to the public link
+	// (GET /v1/temp-link/{location}/{fileName})
+	V1RedirectToPublicLink(ctx echo.Context, location V1RedirectToPublicLinkParamsLocation, fileName string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -36,6 +39,30 @@ func (w *ServerInterfaceWrapper) V1UploadAsset(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.V1UploadAsset(ctx, location)
+	return err
+}
+
+// V1RedirectToPublicLink converts echo context to params.
+func (w *ServerInterfaceWrapper) V1RedirectToPublicLink(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "location" -------------
+	var location V1RedirectToPublicLinkParamsLocation
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "location", runtime.ParamLocationPath, ctx.Param("location"), &location)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter location: %s", err))
+	}
+
+	// ------------- Path parameter "fileName" -------------
+	var fileName string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "fileName", runtime.ParamLocationPath, ctx.Param("fileName"), &fileName)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter fileName: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.V1RedirectToPublicLink(ctx, location, fileName)
 	return err
 }
 
@@ -68,5 +95,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/v1/asset/:location", wrapper.V1UploadAsset)
+	router.GET(baseURL+"/v1/temp-link/:location/:fileName", wrapper.V1RedirectToPublicLink)
 
 }

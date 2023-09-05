@@ -9,8 +9,14 @@ import (
 
 // Defines values for V1UploadAssetParamsLocation.
 const (
-	BLOG     V1UploadAssetParamsLocation = "blog"
-	OBSIDIAN V1UploadAssetParamsLocation = "obsidian"
+	V1UploadAssetParamsLocationBLOG     V1UploadAssetParamsLocation = "blog"
+	V1UploadAssetParamsLocationOBSIDIAN V1UploadAssetParamsLocation = "obsidian"
+)
+
+// Defines values for V1RedirectToPublicLinkParamsLocation.
+const (
+	V1RedirectToPublicLinkParamsLocationBLOG     V1RedirectToPublicLinkParamsLocation = "blog"
+	V1RedirectToPublicLinkParamsLocationOBSIDIAN V1RedirectToPublicLinkParamsLocation = "obsidian"
 )
 
 // Error defines model for Error.
@@ -34,6 +40,9 @@ type V1UploadAssetMultipartBody struct {
 
 // V1UploadAssetParamsLocation defines parameters for V1UploadAsset.
 type V1UploadAssetParamsLocation string
+
+// V1RedirectToPublicLinkParamsLocation defines parameters for V1RedirectToPublicLink.
+type V1RedirectToPublicLinkParamsLocation string
 
 // V1UploadAssetMultipartRequestBody defines body for V1UploadAsset for multipart/form-data ContentType.
 type V1UploadAssetMultipartRequestBody V1UploadAssetMultipartBody
