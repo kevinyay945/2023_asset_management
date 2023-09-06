@@ -33,34 +33,34 @@ func (m *MockCloudFileStorer) EXPECT() *MockCloudFileStorerMockRecorder {
 	return m.recorder
 }
 
-// GetCloudFileByName mocks base method.
-func (m *MockCloudFileStorer) GetCloudFileByName(arg0 string) (CloudFile, error) {
+// GetCloudFileByNameAndLocation mocks base method.
+func (m *MockCloudFileStorer) GetCloudFileByNameAndLocation(arg0 string, arg1 CloudFileLocation) (CloudFile, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCloudFileByName", arg0)
+	ret := m.ctrl.Call(m, "GetCloudFileByNameAndLocation", arg0, arg1)
 	ret0, _ := ret[0].(CloudFile)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetCloudFileByName indicates an expected call of GetCloudFileByName.
-func (mr *MockCloudFileStorerMockRecorder) GetCloudFileByName(arg0 interface{}) *gomock.Call {
+// GetCloudFileByNameAndLocation indicates an expected call of GetCloudFileByNameAndLocation.
+func (mr *MockCloudFileStorerMockRecorder) GetCloudFileByNameAndLocation(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudFileByName", reflect.TypeOf((*MockCloudFileStorer)(nil).GetCloudFileByName), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudFileByNameAndLocation", reflect.TypeOf((*MockCloudFileStorer)(nil).GetCloudFileByNameAndLocation), arg0, arg1)
 }
 
 // GetPublicLink mocks base method.
-func (m *MockCloudFileStorer) GetPublicLink(arg0 CloudFile, arg1 CloudFileLocation) (string, error) {
+func (m *MockCloudFileStorer) GetPublicLink(arg0 CloudFile) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPublicLink", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetPublicLink", arg0)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetPublicLink indicates an expected call of GetPublicLink.
-func (mr *MockCloudFileStorerMockRecorder) GetPublicLink(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCloudFileStorerMockRecorder) GetPublicLink(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPublicLink", reflect.TypeOf((*MockCloudFileStorer)(nil).GetPublicLink), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPublicLink", reflect.TypeOf((*MockCloudFileStorer)(nil).GetPublicLink), arg0)
 }
 
 // UploadFile mocks base method.

@@ -25,7 +25,8 @@ import (
 func InitializeDICmd() *DI {
 	googleDriver := googledrive.NewGoogleDrive()
 	cloudFileStorer := domain.NewGoogleCloudFileStore(googleDriver)
-	fileStorer := application.NewFileStore(cloudFileStorer)
+	previewLinkGenerator := domain.NewPreviewLinkGenerate()
+	fileStorer := application.NewFileStore(cloudFileStorer, previewLinkGenerator)
 	serverInterface := api.NewEchoServer(fileStorer)
 	di := NewDI(serverInterface)
 	return di

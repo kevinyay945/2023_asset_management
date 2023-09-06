@@ -33,6 +33,20 @@ func (m *MockConfiger) EXPECT() *MockConfigerMockRecorder {
 	return m.recorder
 }
 
+// BaseURL mocks base method.
+func (m *MockConfiger) BaseURL() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BaseURL")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// BaseURL indicates an expected call of BaseURL.
+func (mr *MockConfigerMockRecorder) BaseURL() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BaseURL", reflect.TypeOf((*MockConfiger)(nil).BaseURL))
+}
+
 // DocPwd mocks base method.
 func (m *MockConfiger) DocPwd() string {
 	m.ctrl.T.Helper()

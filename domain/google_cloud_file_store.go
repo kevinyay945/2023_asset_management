@@ -15,13 +15,14 @@ func NewGoogleCloudFileStore(googleDriver googledrive.GoogleDriver) CloudFileSto
 	return &GoogleCloudFileStore{googleDriver: googleDriver}
 }
 
-func (c *GoogleCloudFileStore) GetCloudFileByName(name string) (file CloudFile, err error) {
+func (c *GoogleCloudFileStore) GetCloudFileByNameAndLocation(name string, location CloudFileLocation) (file CloudFile, err error) {
 	file.Name = name
+	file.Location = location
 	return
 }
 
-func (c *GoogleCloudFileStore) GetPublicLink(file CloudFile, location CloudFileLocation) (link string, err error) {
-	link, err = c.googleDriver.GetFilePublicLink(location.GoogleDriveUploadLocation(), file.Name)
+func (c *GoogleCloudFileStore) GetPublicLink(file CloudFile) (link string, err error) {
+	link, err = c.googleDriver.GetFilePublicLink(file.Location.GoogleDriveUploadLocation(), file.Name)
 	return
 }
 
@@ -34,12 +35,12 @@ func (c *GoogleCloudFileStore) UploadFile(name string, mimeType string, data []b
 	if err != nil {
 		return
 	}
-	file = NewCloudFileFromGoogleDriveFile(createFile)
+	file = NewCloudFileFromGoogleDriveFile(createFile, location)
 	return
 }
 
-func NewCloudFileFromGoogleDriveFile(dFile *drive.File) (file CloudFile) {
+func NewCloudFileFromGoogleDriveFile(dFile *drive.File, location CloudFileLocation) (file CloudFile) {
 	file.Name = dFile.Name
-	file.Location = CloudFileLocationObsidian
+	file.Location = location
 	return
 }

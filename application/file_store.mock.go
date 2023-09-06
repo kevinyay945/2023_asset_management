@@ -35,18 +35,33 @@ func (m *MockFileStorer) EXPECT() *MockFileStorerMockRecorder {
 }
 
 // GetPreviewLink mocks base method.
-func (m *MockFileStorer) GetPreviewLink(arg0 domain.CloudFile, arg1 domain.CloudFileLocation) (string, error) {
+func (m *MockFileStorer) GetPreviewLink(arg0 domain.CloudFile) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPreviewLink", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetPreviewLink", arg0)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetPreviewLink indicates an expected call of GetPreviewLink.
-func (mr *MockFileStorerMockRecorder) GetPreviewLink(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockFileStorerMockRecorder) GetPreviewLink(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreviewLink", reflect.TypeOf((*MockFileStorer)(nil).GetPreviewLink), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreviewLink", reflect.TypeOf((*MockFileStorer)(nil).GetPreviewLink), arg0)
+}
+
+// GetPreviewLinkByLocationAndFileName mocks base method.
+func (m *MockFileStorer) GetPreviewLinkByLocationAndFileName(arg0 domain.CloudFileLocation, arg1 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPreviewLinkByLocationAndFileName", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPreviewLinkByLocationAndFileName indicates an expected call of GetPreviewLinkByLocationAndFileName.
+func (mr *MockFileStorerMockRecorder) GetPreviewLinkByLocationAndFileName(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreviewLinkByLocationAndFileName", reflect.TypeOf((*MockFileStorer)(nil).GetPreviewLinkByLocationAndFileName), arg0, arg1)
 }
 
 // UploadAsset mocks base method.

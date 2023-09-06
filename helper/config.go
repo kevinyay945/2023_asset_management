@@ -10,9 +10,14 @@ type Configer interface {
 	DocUser() string
 	DocPwd() string
 	GoogleDriveApiToken() string
+	BaseURL() string
 }
 
 type config struct {
+}
+
+func (m *config) BaseURL() string {
+	return viper.GetString("BASE_URL")
 }
 
 func (m *config) GoogleDriveApiToken() string {

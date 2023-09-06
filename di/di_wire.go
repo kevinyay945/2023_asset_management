@@ -19,6 +19,7 @@ func InitializeDICmd() *DI {
 		googledrive.NewGoogleDrive,
 		application.NewFileStore,
 		domain.NewGoogleCloudFileStore,
+		domain.NewPreviewLinkGenerate,
 		api.NewEchoServer,
 		NewDI,
 	)

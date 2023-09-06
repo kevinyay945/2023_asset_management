@@ -26,13 +26,7 @@ paths:
           description: save location
           required: true
           schema:
-            type: string
-            enum:
-              - "obsidian"
-              - "blog"
-            x-enum-varnames:
-              - OBSIDIAN
-              - BLOG
+            $ref: '#/components/schemas/V1AssetLocation'
         - name: fileName
           in: path
           description: save location
@@ -48,7 +42,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+      
   /v1/asset/{location}:
     post:
       summary: upload one asset and get preview link
@@ -62,14 +56,7 @@ paths:
           description: save location
           required: true
           schema:
-            type: string
-            enum:
-              - "obsidian"
-              - "blog"
-            x-enum-varnames:
-              - OBSIDIAN
-              - BLOG
-
+            $ref: '#/components/schemas/V1AssetLocation'
       requestBody:
         content:
           multipart/form-data:
@@ -85,7 +72,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/TempAsset'
         default:
           description: unexpected error
@@ -96,6 +82,14 @@ paths:
 
 components:
   schemas:
+    V1AssetLocation:
+      type: string
+      enum:
+        - "obsidian"
+        - "blog"
+      x-enum-varnames:
+        - V1AssetLocationObsidian
+        - V1AssetLocationBlog
     TempAsset:
       required:
         - url

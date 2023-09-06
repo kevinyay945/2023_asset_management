@@ -15,33 +15,36 @@ type EchoServer struct {
 	fileStorer application.FileStorer
 }
 
-func (e *EchoServer) V1RedirectToPublicLink(ctx echo.Context, location V1RedirectToPublicLinkParamsLocation, fileName string) error {
-	//TODO implement me
-	panic("implement me")
+func (e *EchoServer) V1RedirectToPublicLink(ctx echo.Context, location V1AssetLocation, fileName string) error {
+	link, err := e.fileStorer.GetPreviewLinkByLocationAndFileName(location.DomainLocation(), fileName)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+	return ctx.Redirect(http.StatusFound, link)
 }
 
 func NewEchoServer(fileStorer application.FileStorer) ServerInterface {
 	return &EchoServer{fileStorer: fileStorer}
 }
 
-func (location V1UploadAssetParamsLocation) IsValid() bool {
+func (location V1AssetLocation) IsValid() bool {
 	switch location {
-	case V1UploadAssetParamsLocationBLOG, V1UploadAssetParamsLocationOBSIDIAN:
+	case V1AssetLocationBlog, V1AssetLocationObsidian:
 		return true
 	}
 	return false
 }
-func (location V1UploadAssetParamsLocation) DomainLocation() domain.CloudFileLocation {
+func (location V1AssetLocation) DomainLocation() domain.CloudFileLocation {
 	switch location {
-	case V1UploadAssetParamsLocationOBSIDIAN:
+	case V1AssetLocationObsidian:
 		return domain.CloudFileLocationObsidian
-	case V1UploadAssetParamsLocationBLOG:
+	case V1AssetLocationBlog:
 		return domain.CloudFileLocationBlog
 	}
 	return domain.CloudFileLocationObsidian
 }
 
-func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1UploadAssetParamsLocation) error {
+func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1AssetLocation) error {
 	if !location.IsValid() {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("location is invalid"))
 	}
@@ -64,7 +67,7 @@ func (e *EchoServer) V1UploadAsset(ctx echo.Context, location V1UploadAssetParam
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	link, err := e.fileStorer.GetPreviewLink(asset, location.DomainLocation())
+	link, err := e.fileStorer.GetPreviewLink(asset)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}

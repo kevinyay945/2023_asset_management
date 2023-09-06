@@ -15,10 +15,10 @@ import (
 type ServerInterface interface {
 	// upload one asset and get preview link
 	// (POST /v1/asset/{location})
-	V1UploadAsset(ctx echo.Context, location V1UploadAssetParamsLocation) error
+	V1UploadAsset(ctx echo.Context, location V1AssetLocation) error
 	// redirect to the public link
 	// (GET /v1/temp-link/{location}/{fileName})
-	V1RedirectToPublicLink(ctx echo.Context, location V1RedirectToPublicLinkParamsLocation, fileName string) error
+	V1RedirectToPublicLink(ctx echo.Context, location V1AssetLocation, fileName string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -30,7 +30,7 @@ type ServerInterfaceWrapper struct {
 func (w *ServerInterfaceWrapper) V1UploadAsset(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "location" -------------
-	var location V1UploadAssetParamsLocation
+	var location V1AssetLocation
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "location", runtime.ParamLocationPath, ctx.Param("location"), &location)
 	if err != nil {
@@ -46,7 +46,7 @@ func (w *ServerInterfaceWrapper) V1UploadAsset(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) V1RedirectToPublicLink(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "location" -------------
-	var location V1RedirectToPublicLinkParamsLocation
+	var location V1AssetLocation
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "location", runtime.ParamLocationPath, ctx.Param("location"), &location)
 	if err != nil {
